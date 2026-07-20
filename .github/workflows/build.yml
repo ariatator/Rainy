@@ -20,8 +20,32 @@ jobs:
 
     - name: Package into IPA
       run: |
-        mkdir -p Payload
-        cp -r BuildData/Build/Products/Debug-iphoneos/Rainy.app Payload/
+        mkdir -p Payload/Rainy.app
+        cp BuildData/Build/Products/Debug-iphoneos/Rainy Payload/Rainy.app/
+        cat << 'EOF' > Payload/Rainy.app/Info.plist
+        <?xml version="1.0" encoding="UTF-8"?>
+        <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+        <plist version="1.0">
+        <dict>
+            <key>CFBundleExecutable</key>
+            <string>Rainy</string>
+            <key>CFBundleIdentifier</key>
+            <string>com.example.Rainy</string>
+            <key>CFBundleName</key>
+            <string>Rainy</string>
+            <key>CFBundleShortVersionString</key>
+            <string>1.0</string>
+            <key>CFBundleVersion</key>
+            <string>1</string>
+            <key>LSRequiresIPhoneOS</key>
+            <true/>
+            <key>MinimumOSVersion</key>
+            <string>17.0</string>
+            <key>NSSupportsLiveActivities</key>
+            <true/>
+        </dict>
+        </plist>
+        EOF
         zip -r Rainy.ipa Payload
 
     - name: Upload IPA Artifact
