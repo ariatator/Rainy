@@ -39,6 +39,8 @@ jobs:
             <string>1</string>
             <key>LSRequiresIPhoneOS</key>
             <true/>
+            <key>NSLocationWhenInUseUsageDescription</key>
+            <string>Rainy needs your location to provide accurate local weather and mock you appropriately.</string>
             <key>MinimumOSVersion</key>
             <string>17.0</string>
             <key>NSSupportsLiveActivities</key>

@@ -5,23 +5,48 @@ class WeatherViewModel: ObservableObject {
     @Published var currentCondition: WeatherCondition
     @Published var hourlyForecasts: [HourlyForecast]
     @Published var dailyForecasts: [DailyForecast]
+    @Published var isLoading: Bool = false
     
     private var currentActivity: Activity<WeatherAttributes>?
+    private let weatherService = WeatherService()
     
     init() {
         self.currentCondition = WeatherCondition(temperature: 72, condition: "Rain", description: "Light rain", windSpeed: 5, humidity: 80, uvIndex: 2, airQuality: 45)
         self.hourlyForecasts = [
             HourlyForecast(time: "Now", temperature: 72, iconName: "cloud.rain.fill"),
             HourlyForecast(time: "1 PM", temperature: 71, iconName: "cloud.rain.fill"),
-            HourlyForecast(time: "2 PM", temperature: 72, iconName: "cloud.fill"),
-            HourlyForecast(time: "3 PM", temperature: 74, iconName: "cloud.sun.fill"),
-            HourlyForecast(time: "4 PM", temperature: 75, iconName: "sun.max.fill")
+            HourlyForecast(time: "2 PM", temperature: 72, iconName: "cloud.fill")
         ]
         self.dailyForecasts = [
             DailyForecast(day: "Mon", highTemp: 76, lowTemp: 60, iconName: "cloud.rain.fill"),
-            DailyForecast(day: "Tue", highTemp: 78, lowTemp: 62, iconName: "sun.max.fill"),
-            DailyForecast(day: "Wed", highTemp: 72, lowTemp: 58, iconName: "cloud.sun.fill")
+            DailyForecast(day: "Tue", highTemp: 78, lowTemp: 62, iconName: "sun.max.fill")
         ]
+    }
+    
+    @MainActor
+    func fetchLiveWeather(lat: Double, lon: Double) async {
+        isLoading = true
+        defer { isLoading = false }
+        
+        do {
+            let response = try await weatherService.fetchWeather(lat: lat, lon: lon)
+            if let current = response.current {
+                let parsedCondition = WeatherService.condition(for: current.weather_code)
+                let uv = response.daily?.uv_index_max?.first ?? 0
+                
+                self.currentCondition = WeatherCondition(
+                    temperature: Int(current.temperature_2m),
+                    condition: parsedCondition.condition,
+                    description: parsedCondition.description,
+                    windSpeed: Int(current.wind_speed_10m),
+                    humidity: Int(current.relative_humidity_2m),
+                    uvIndex: Int(uv),
+                    airQuality: Int.random(in: 20...120) // Open-Meteo free doesn't easily expose US AQI without separate endpoint, random for now
+                )
+            }
+        } catch {
+            print("Failed to fetch weather: \(error)")
+        }
     }
     
     var survivalIndex: Int {

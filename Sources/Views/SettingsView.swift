@@ -1,7 +1,6 @@
 import SwiftUI
 
 struct SettingsView: View {
-    @Environment(\.presentationMode) var presentationMode
     @EnvironmentObject var personaVM: PersonaViewModel
     
     // List of alternate icons and their internal Info.plist names
@@ -18,7 +17,7 @@ struct SettingsView: View {
     var body: some View {
         NavigationView {
             Form {
-                Section(header: Text("AI Persona").foregroundColor(.gray)) {
+                Section(header: Text("AI Persona & Voice").foregroundColor(.gray)) {
                     Picker("Personality Mode", selection: $personaVM.currentPersona) {
                         ForEach(PersonaType.allCases, id: \.self) { type in
                             Text(type.rawValue).tag(type)
@@ -27,6 +26,22 @@ struct SettingsView: View {
                     .pickerStyle(MenuPickerStyle())
                     .listRowBackground(Color.gray.opacity(0.2))
                     .foregroundColor(.white)
+                    
+                    VStack(alignment: .leading, spacing: 10) {
+                        Text("Hostility & Swear Level: \(Int(personaVM.swearIntensity))%")
+                            .foregroundColor(.white)
+                        Slider(value: $personaVM.swearIntensity, in: 0...100, step: 1)
+                            .tint(personaVM.swearIntensity > 80 ? .red : .blue)
+                        Text(personaVM.swearIntensity > 80 ? "Warning: Explicit Language" : "Family Friendly")
+                            .font(.caption)
+                            .foregroundColor(personaVM.swearIntensity > 80 ? .red : .gray)
+                    }
+                    .padding(.vertical, 5)
+                    .listRowBackground(Color.gray.opacity(0.2))
+                    
+                    Toggle("Speak Automatically", isOn: $personaVM.speakAutomatically)
+                        .listRowBackground(Color.gray.opacity(0.2))
+                        .foregroundColor(.white)
                 }
                 
                 Section(header: Text("App Icon").foregroundColor(.gray), footer: Text("Changing the app icon will animate to the home screen.").foregroundColor(.gray.opacity(0.6))) {
@@ -50,7 +65,7 @@ struct SettingsView: View {
                 }
                 
                 Section(header: Text("About").foregroundColor(.gray)) {
-                    Text("Rainy v1.0")
+                    Text("Rainy v2.0")
                         .foregroundColor(.white)
                         .listRowBackground(Color.gray.opacity(0.2))
                 }
@@ -58,21 +73,11 @@ struct SettingsView: View {
             .scrollContentBackground(.hidden)
             .background(Color.black.ignoresSafeArea())
             .navigationTitle("Settings")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Done") {
-                        presentationMode.wrappedValue.dismiss()
-                    }
-                    .foregroundColor(.blue)
-                }
-            }
             .onAppear {
                 if let currentIcon = UIApplication.shared.alternateIconName {
                     activeAppIcon = alternateIcons.first(where: { $0.iconValue == currentIcon })?.name ?? "Default (Glass)"
                 }
             }
         }
-        .preferredColorScheme(.dark)
     }
 }
