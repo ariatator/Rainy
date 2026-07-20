@@ -16,7 +16,7 @@ jobs:
       run: sudo xcode-select -s /Applications/Xcode_15.0.app/Contents/Developer
 
     - name: Build Project for iPhone (Unsigned)
-      run: xcodebuild clean build -scheme Rainy -sdk iphoneos CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO -derivedDataPath BuildData/
+      run: xcodebuild clean build -scheme Rainy -destination "generic/platform=iOS" CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO -derivedDataPath BuildData/
 
     - name: Package into IPA
       run: |
