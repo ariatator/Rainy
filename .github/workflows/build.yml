@@ -3,8 +3,7 @@ name: Build Rainy iOS App
 on:
   push:
     branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+  workflow_dispatch:
 
 jobs:
   build:
@@ -16,5 +15,17 @@ jobs:
     - name: Select Xcode
       run: sudo xcode-select -s /Applications/Xcode_15.0.app/Contents/Developer
 
-    - name: Build Project for iOS
-      run: xcodebuild clean build -scheme Rainy -destination 'platform=iOS Simulator,name=iPhone 15'
+    - name: Build Project for iPhone (Unsigned)
+      run: xcodebuild clean build -scheme Rainy -sdk iphoneos CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO -derivedDataPath BuildData/
+
+    - name: Package into IPA
+      run: |
+        mkdir -p Payload
+        cp -r BuildData/Build/Products/Debug-iphoneos/Rainy.app Payload/
+        zip -r Rainy.ipa Payload
+
+    - name: Upload IPA Artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: Rainy-App
+        path: Rainy.ipa
