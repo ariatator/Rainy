@@ -10,7 +10,7 @@ jobs:
     runs-on: macos-14
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - name: Select Xcode
       run: sudo xcode-select -s /Applications/Xcode_15.0.app/Contents/Developer
@@ -25,7 +25,7 @@ jobs:
         zip -r Rainy.ipa Payload
 
     - name: Upload IPA Artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: Rainy-App
         path: Rainy.ipa
