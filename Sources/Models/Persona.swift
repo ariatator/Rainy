@@ -9,20 +9,25 @@ enum PersonaType: String, CaseIterable {
 
 struct PersonaQuote {
     static func getQuote(for type: PersonaType, temp: Int, condition: String, intensity: Double) -> String {
-        let isSpicy = intensity > 80.0
+        let isSpicy = intensity > 80.0 && intensity < 100.0
+        let isUnhinged = intensity == 100.0
         
         switch type {
         case .snarky:
             if condition.lowercased().contains("rain") { 
+                if isUnhinged { return "It's fucking raining. Stay inside your damp cave, you absolute fucking moron." }
                 return isSpicy ? "It's f***ing raining. Stay inside your damp cave, you absolute moron." : "It's raining. Perfect excuse for you not to go to the gym, right?" 
             }
             if temp > 85 { 
+                if isUnhinged { return "It's \(temp)° out there. It's so fucking hot you might as well go outside completely naked. Are you stupid enough to go outside right now?" }
                 return isSpicy ? "It's \(temp)° out there. Are you stupid enough to go outside right now?" : "It's \(temp)°. Why are you outside? Go back to your air-conditioned cave." 
             }
             else if temp < 40 { 
+                if isUnhinged { return "What the fuck are you doing with your life? It's fucking \(temp) degrees. Go touch some shit-ass grass, but put a damn jacket on." }
                 return isSpicy ? "It's freezing as sh**. Put on a damn jacket." : "It's freezing out there. I hope you brought a jacket, but knowing you, probably not." 
             }
             else { 
+                if isUnhinged { return "What the fuck are you doing with your life? It's fucking \(temp) degrees. Go touch some shit-ass grass." }
                 return isSpicy ? "It's \(temp)°. Go outside and touch some f***ing grass." : "It's \(temp)°. Tolerable, but I still wouldn't go outside if I were you." 
             }
             
