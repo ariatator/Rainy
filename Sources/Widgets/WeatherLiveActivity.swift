@@ -11,7 +11,7 @@ struct WeatherLiveActivity: Widget {
                     .fill(.ultraThinMaterial)
                 
                 HStack {
-                    iconFor(type: context.attributes.trackingType)
+                    TrackerIcon(type: context.attributes.trackingType)
                         .font(.title)
                     VStack(alignment: .leading) {
                         Text(context.attributes.eventName)
@@ -32,7 +32,7 @@ struct WeatherLiveActivity: Widget {
             DynamicIsland {
                 // Expanded Region
                 DynamicIslandExpandedRegion(.leading) {
-                    iconFor(type: context.attributes.trackingType)
+                    TrackerIcon(type: context.attributes.trackingType)
                         .font(.title2)
                 }
                 DynamicIslandExpandedRegion(.trailing) {
@@ -46,21 +46,26 @@ struct WeatherLiveActivity: Widget {
                         .foregroundColor(.white)
                 }
             } compactLeading: {
-                iconFor(type: context.attributes.trackingType)
+                TrackerIcon(type: context.attributes.trackingType)
             } compactTrailing: {
                 Text(context.state.primaryValue).foregroundColor(.white).font(.caption)
             } minimal: {
-                iconFor(type: context.attributes.trackingType)
+                TrackerIcon(type: context.attributes.trackingType)
             }
         }
     }
-    
-    @ViewBuilder
-    func iconFor(type: TrackingType) -> some View {
+}
+
+struct TrackerIcon: View {
+    let type: TrackingType
+    var body: some View {
         switch type {
-        case .rain: Image(systemName: "cloud.rain.fill").foregroundColor(.blue)
-        case .sunset: Image(systemName: "sunset.fill").foregroundColor(.orange)
-        case .index: Image(systemName: "leaf.fill").foregroundColor(.green)
+        case .rain:
+            Image(systemName: "cloud.rain.fill").foregroundColor(.blue)
+        case .sunset:
+            Image(systemName: "sunset.fill").foregroundColor(.orange)
+        case .index:
+            Image(systemName: "leaf.fill").foregroundColor(.green)
         }
     }
 }

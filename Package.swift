@@ -4,7 +4,7 @@ import PackageDescription
 let package = Package(
     name: "Rainy",
     platforms: [
-        .iOS(.v16)
+        .iOS(.v17)
     ],
     targets: [
         .executableTarget(
