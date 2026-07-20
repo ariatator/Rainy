@@ -9,7 +9,10 @@ let package = Package(
     targets: [
         .executableTarget(
             name: "Rainy",
-            path: "Sources"
+            path: "Sources",
+            resources: [
+                .process("Assets.xcassets")
+            ]
         )
     ]
 )

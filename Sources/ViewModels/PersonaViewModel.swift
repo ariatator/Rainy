@@ -12,6 +12,12 @@ class PersonaViewModel: NSObject, ObservableObject, AVSpeechSynthesizerDelegate 
     override init() {
         super.init()
         synthesizer.delegate = self
+        do {
+            try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default, options: .mixWithOthers)
+            try AVAudioSession.sharedInstance().setActive(true)
+        } catch {
+            print("Failed to set audio session category: \(error)")
+        }
     }
     
     func updateQuote(temp: Int, condition: String) {

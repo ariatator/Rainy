@@ -117,6 +117,7 @@ struct MainWeatherView: View {
                     }
                 }
             }
+            .ignoresSafeArea(.all)
             .navigationBarHidden(true)
             .onChange(of: locationManager.location) { newLocation in
                 if let loc = newLocation {

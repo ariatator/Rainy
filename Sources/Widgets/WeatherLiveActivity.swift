@@ -7,8 +7,27 @@ struct WeatherLiveActivity: Widget {
         ActivityConfiguration(for: WeatherAttributes.self) { context in
             // Lock screen / Banner UI
             ZStack {
-                RoundedRectangle(cornerRadius: 20)
+                RoundedRectangle(cornerRadius: 24)
                     .fill(.ultraThinMaterial)
+                    .environment(\.colorScheme, .dark)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 24)
+                            .stroke(
+                                LinearGradient(
+                                    colors: [.white.opacity(0.6), .clear, .white.opacity(0.3)],
+                                    startPoint: .topLeading,
+                                    endPoint: .bottomTrailing
+                                ),
+                                lineWidth: 1.5
+                            )
+                    )
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 24)
+                            .stroke(Color.white.opacity(0.2), lineWidth: 1)
+                            .blur(radius: 1)
+                            .offset(x: -1, y: -1)
+                            .mask(RoundedRectangle(cornerRadius: 24))
+                    )
                 
                 HStack {
                     TrackerIcon(type: context.attributes.trackingType)

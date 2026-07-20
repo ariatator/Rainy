@@ -6,29 +6,31 @@ struct RainyApp: App {
     @StateObject private var personaViewModel = PersonaViewModel()
     @StateObject private var locationManager = LocationManager()
     
+    @State private var selectedTab: Tab = .weather
+    
     var body: some Scene {
         WindowGroup {
-            TabView {
-                MainWeatherView()
-                    .tabItem {
-                        Label("Weather", systemImage: "cloud.sun.fill")
+            ZStack(alignment: .bottom) {
+                // Main Content
+                Group {
+                    switch selectedTab {
+                    case .weather:
+                        MainWeatherView()
+                    case .radar:
+                        Text("Radar Map Coming Soon")
+                            .foregroundColor(.white)
+                            .font(.headline)
+                            .frame(maxWidth: .infinity, maxHeight: .infinity)
+                            .background(Color.black.ignoresSafeArea())
+                    case .settings:
+                        SettingsView()
                     }
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
                 
-                Text("Radar Map Coming Soon")
-                    .foregroundColor(.white)
-                    .font(.headline)
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .background(Color.black.ignoresSafeArea())
-                    .tabItem {
-                        Label("Radar", systemImage: "map.fill")
-                    }
-                
-                SettingsView()
-                    .tabItem {
-                        Label("Settings", systemImage: "gearshape.fill")
-                    }
+                // Floating Tab Bar
+                LiquidTabBar(selectedTab: $selectedTab)
             }
-            .tint(.white)
             .environmentObject(weatherViewModel)
             .environmentObject(personaViewModel)
             .environmentObject(locationManager)

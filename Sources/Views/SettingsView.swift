@@ -27,11 +27,10 @@ struct SettingsView: View {
                     .listRowBackground(Color.gray.opacity(0.2))
                     .foregroundColor(.white)
                     
-                    VStack(alignment: .leading, spacing: 10) {
+                    VStack(alignment: .leading, spacing: 15) {
                         Text("Hostility & Swear Level: \(Int(personaVM.swearIntensity))%")
                             .foregroundColor(.white)
-                        Slider(value: $personaVM.swearIntensity, in: 0...100, step: 1)
-                            .tint(personaVM.swearIntensity > 80 ? .red : .blue)
+                        LiquidSlider(value: $personaVM.swearIntensity, range: 0...100, step: 1, tint: personaVM.swearIntensity > 80 ? .red : .blue)
                         Text(personaVM.swearIntensity > 80 ? "Warning: Explicit Language" : "Family Friendly")
                             .font(.caption)
                             .foregroundColor(personaVM.swearIntensity > 80 ? .red : .gray)
